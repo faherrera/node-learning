@@ -36,16 +36,16 @@ function getProduct(req,res){
 }
 
 function storeProduct(req,res){
-    const productData = req.body;
-    const newProduct = new productModel();
+    const payload = req.body;
+    const product = new productModel();
 
-    product.name = productData.name;
-    product.picture = productData.picture;
-    product.price = productData.price;
-    product.category = productData.category;
-    product.description = productData.description;
+    product.name = payload.name;
+    product.picture = payload.picture;
+    product.price = payload.price;
+    product.category = payload.category;
+    product.description = payload.description;
 
-    newProduct.save(
+    product.save(
         (err,productStored) => {
             err && serverError500(res);
 
@@ -57,13 +57,9 @@ function storeProduct(req,res){
 function updateProduct(req,res){
     const {productId} = req.params;
     const newProduct = req.body;
-
     productModel.findByIdAndUpdate(
         productId,
         newProduct,
-        {
-            upsert:true
-        },
         (err,productUpdated) => {
             err && serverError500(500);
 
