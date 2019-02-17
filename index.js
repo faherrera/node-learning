@@ -1,10 +1,9 @@
 'use strict'
 const mongoose = require('mongoose');
 const app = require('./app');
+const config = require('./utils/config');
 
-const PORT = process.env.PORT || 3005;
-
-mongoose.connect('mongodb://localhost:27017/shop',
+mongoose.connect(config.DATABASE,
     (err,res) => {
         if (err) {
             throw err;
@@ -12,10 +11,10 @@ mongoose.connect('mongodb://localhost:27017/shop',
         console.log("Conexión a la bd establecida");
 
         app.listen(
-            PORT,
+            config.PORT,
             () => {
                 console.log(`App running into localhost ${
-                    PORT
+                    config.PORT
                 }`);
                 
             }
