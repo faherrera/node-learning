@@ -20,7 +20,8 @@ const signUp = (req,res) => {
     });
     
     user.save( (err) =>{
-        err &&  serverError500(res);
+        console.log("Esto trae el error", err);
+        err &&  serverError500(res,{message: "Está ocurriendo un error en signUp", err:err});
 
         serverError200(res,null,{
             token: _authService.createToken(user),
@@ -31,7 +32,23 @@ const signUp = (req,res) => {
 
 
 const signIn = (req,res) => {
-    ////Hacer el signIn para generar el token
+    new UserModel().find(
+        {email: req.body.email},
+        (err, user) => {
+            err && serverError500(res);
+
+            !user 
+            ? 
+                serverError404(res)
+            : 
+                serverError200(res,null,{
+                    message:"Te has logueado correctamente",
+                    token: authService.createToken(user)
+                }); 
+            ;
+        }
+    );
+
 }
 
 module.exports = {

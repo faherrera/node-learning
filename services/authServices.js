@@ -15,5 +15,30 @@ class AuthServices{
 
         return jwt.encode( payload, config.SECRET_TOKEN);
     }
+
+    decodeToken(token){
+        const decoded = new Promise(
+            (resolve, reject) => {
+                try {
+                    const payload = jwt.decode(token, config.SECRET_TOKEN);
+                        (payload.exp <= moment.unix()) && reject({
+                            status:401,
+                            message:"El token ha expirado",
+                        });
+                    resolve(
+                        payload.sub
+                    );
+
+                } catch (error) {
+                    reject({
+                        status:500,
+                        message: "Ocurrio un error en el servidor"
+                    });
+                }
+
+            }
+        );
+        return decoded;
+    }
 }
 module.exports = AuthServices;

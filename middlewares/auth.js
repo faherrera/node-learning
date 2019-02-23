@@ -1,23 +1,28 @@
 'use strict'
-
-const jwt = require('jwt-simple');
-const moment = require('moment');
-const config = require('../utils/config');
+const authServices = require('../services/authServices');
 
 function isAuth(req,res,next){
-    !req.headers.authorization && 
-    res.status(403).send({message: 'No tiene autorización'})
+    
+    if(!req.headers.authorization){
+       return res.status(403).send({message: 'No tiene autorización'})
+    } 
 
     const token = req.headers.authorization.split(' ')[1];
-    const payload = jwt.decode(token, config.SECRET_TOKEN);
     
-    (payload.exp <= moment.unix()) && res.status(401).send({message: 'El token ha expirado'})
+    const _authServices = new authServices();
 
-    req.user = payload.sub;
-    next()
-
+    _authServices.decodeToken(token)
+    .then(
+        response => {
+            req.user = response;
+            next()
+        }
+    )
+    .catch(
+        err => {
+            res.status(err.status);
+        }
+    )
 }
 
-module.exports = {
-    isAuth
-}
+module.exports = isAuth

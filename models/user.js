@@ -15,8 +15,8 @@ const UserSchema = Schema({
 });
 
 /// This func is trigger before the model will be stored in database
-UserSchema.pre('save', (next) =>{
-    let user = UserSchema;
+UserSchema.pre('save', function(next){
+    let user = this;
 
     !user.isModified('password') && next(); //If the password is not modifed so next.
 
@@ -43,4 +43,4 @@ UserSchema.method.gravatar = function (){
     return  `https://www.gravatar.com/avatar/${md5}?s=200&d=retro`
 }
 
-module.exports = UserSchema;
+module.exports = mongoose.model('User', UserSchema);
