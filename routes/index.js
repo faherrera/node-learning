@@ -5,7 +5,7 @@ const productEndpoint = require('./product');
 const isAuthMiddle = require('../middlewares/auth');
 const userController = require('../controllers/users');
 
-apiRouter.use('/product', productEndpoint);
+apiRouter.use('/product',isAuthMiddle, productEndpoint);
 apiRouter.post('/signup',userController.signUp);
 apiRouter.post('/signin',userController.signIn);
 apiRouter.get('/private', isAuthMiddle, (req,res) => 

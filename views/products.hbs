@@ -1,0 +1,34 @@
+
+<div class="container" id="wrapper">
+    <h1>
+        Listado de productos
+    </h1>
+
+</div>
+<script>
+    const myHeaders = new Headers();
+    console.log(`Bearer ${localStorage._token}`);
+    myHeaders.append('authorization',`Bearer ${localStorage._token}`);
+    
+    const productList = document.createElement('ul');
+    
+    fetch('/api/product',{
+        method: 'GET',
+        headers: myHeaders,
+    })
+    .then(
+        res => res.json()
+    ).then(
+        res => {
+            console.log('Listado de productos', res)
+            
+            res.data.map(product => {
+                let $product = document.createElement('li');
+                $product.textContent = product.name || "Sin nombre";
+                productList.appendChild($product);
+            })
+            let $wrapper = document.getElementById('wrapper');        
+            $wrapper.appendChild(productList);
+        }
+    )
+</script>

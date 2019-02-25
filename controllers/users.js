@@ -9,10 +9,10 @@ const {
 } = require('../utils/serverMessages');
 
 const authService = require('../services/authServices');
+const _authService = new authService();
 
 const signUp = (req,res) => {
     let {email,name} = req.body;
-    const _authService = new authService();
 
     const user = new UserModel({
         email: email,
@@ -32,22 +32,31 @@ const signUp = (req,res) => {
 
 
 const signIn = (req,res) => {
-    new UserModel().find(
-        {email: req.body.email},
-        (err, user) => {
-            err && serverError500(res);
+    console.clear();
+    console.log('Estoy entrando por SignIn', req.body);
+    let _user = UserModel;
 
-            !user 
-            ? 
-                serverError404(res)
-            : 
-                serverError200(res,null,{
-                    message:"Te has logueado correctamente",
-                    token: authService.createToken(user)
-                }); 
-            ;
-        }
-    );
+    try {
+        _user.findOne(
+            {email: req.body.email},
+            (err, user) => {
+                if (err) return serverError500(res);
+                
+                !user 
+                ? 
+                    serverError404(res)
+                : 
+                    serverError200(res,null,{
+                        message:"Te has logueado correctamente",
+                        token: _authService.createToken(user)
+                    }); 
+                ;
+            }
+        );
+        
+    } catch (error) {
+        serverError500(res, {error:error.message});
+    }
 
 }
 
