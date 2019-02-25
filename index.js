@@ -1,29 +1,24 @@
 'use strict'
-const express = require('express');
-const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const app = require('./app');
+const config = require('./utils/config');
 
+mongoose.connect(config.DATABASE,
+    (err,res) => {
+        if (err) {
+            throw err;
+        }
+        console.log("Conexión a la bd establecida");
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(bodyParser.urlencoded({
-    extended:false,
-}));
-app.use(bodyParser.json());
-
-app.get(
-    '/hola/:name',
-    (req,res) => {
-        res.send({message: `Hola ${req.params.name || 'default'}`})
-    }
-);
-app.listen(
-    PORT,
-    () => {
-        console.log(`App running into localhost ${
-            PORT
-        }`);
-        
+        app.listen(
+            config.PORT,
+            () => {
+                console.log(`App running into localhost ${
+                    config.PORT
+                }`);
+                
+            }
+        );
     }
 );
 

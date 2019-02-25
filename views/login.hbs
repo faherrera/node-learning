@@ -1,0 +1,44 @@
+<div class="container">
+    <form method="post" id="login">
+        <input type="text" name="email" id="email"  placeholder="Ingrese su email">
+        <input type="password" name="password" id="password"  placeholder="Ingrese su contraseña">
+        <input type="submit" value="Login">
+    </form>
+</div>
+
+<script type="text/javascript">
+    const formLogin = document.querySelector('#login');
+
+    formLogin.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new URLSearchParams(new FormData(formLogin));
+
+       fetch('/api/signin', {
+           method:'POST',
+           body: formData,
+           headers:{
+               
+           }
+       })
+       .then(
+           res => {
+               if(res.status != 200){
+                   throw res 
+               }
+               return res.json();
+           }
+       )
+       .then(
+           data => {
+               localStorage.setItem('_token',data.token);
+           }
+       ).catch(
+           err => {
+               console.log("Se captura el error", err)
+               alert("Ocurrió un error al verificar la autenticación del usuario");
+           }
+       )
+    });
+
+      
+</script>
